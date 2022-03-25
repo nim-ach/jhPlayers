@@ -1,0 +1,377 @@
+---
+title: ""
+bibliography: "misc/ref.bib"
+csl: "misc/vancouver.csl"
+output: 
+  word_document:
+    reference_docx: "misc/ref_rsm.docx" 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+# Regular set-up
+knitr::opts_chunk$set(
+	echo = FALSE,
+	error = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r packages}
+# Load packages needed
+c("here", "data.table") |> 
+  lapply(library, character.only = TRUE) |> 
+  invisible()
+```
+
+```{r custom-functions}
+# Set custom functions
+.s <- `[`     # For data.table pipe-able
+.get <- `[[`  # options
+
+# For P-values styling 
+style.p <- function(p, k = 3) {
+    data.table::fcase(
+      p < 0.001, "< 0.001",
+      p >= 0.001, paste0("= ", round(p, digits = k))
+    )
+}
+
+# To get label from cor.test output
+cor_label <- function(test) {
+  with(test, {
+    t       <- round(test$statistic, digits = 1)
+    df      <- test$parameter
+    p       <- style.p(test$p.value)
+    r       <- round(test$estimate, digits = 2)
+    ci_low  <- round(test$conf.int[1], digits = 2)
+    ci_high <- round(test$conf.int[2], digits = 2)
+    paste0("$t_{Student}$ (7) = ",t,", *p* ",p,", $r_{Pearson}$ = ",r,", CI~95%~[",ci_low,", ",ci_high,"]")
+  })
+}
+
+```
+
+```{r load-data}
+# Load data
+data <- local({
+  # Variables to work with
+  .subjects <- c(1004, 1013, 1021, 1024, 1027, 1033, 1039, 1041, 1043)
+
+  # Columns to work with
+  .cols <- c("Sexo", "Edad", "Peso", "Talla", "IMC", "Grasa", "FFMI", "PS", "PD",
+             "PAM", "PP", "Potencia_max", "Potencia_mean", "Potencia_min",
+             "Fatiga", "FEV1", "FVC", "PEF", "FEV1_FVC", "FEF25", "FEF50",
+             "FEF75", "FEF25_75", "MVV", "FET", "PIMAX", "PIMAXSOS")
+
+  # Load data
+  temp <- readRDS(file = here::here("data/clean/not_swim.RDS"))
+
+  # Filter data
+  temp[Periodo == "BASAL" & ID %in% .subjects, .SD, .SDcols = .cols]
+})
+```
+
+:::{custom-style="Paragraph"}
+**ABSTRACT**: To study the haemodynamic properties of the peripheral circulation and its relationship with cardiorespiratory control, during anaerobic muscle fatigue test, in young competitive athletes, nine adolescent of national and international competition level were recruited (age: 15.6 ± 1.9 years; male = 7) and cross-evaluated. Morphological measurements (body mass, percentage of total body fat and height), blood pressure (systolic, diastolic, mean and pulse blood pressure), respiratory measures (spirometry and pimometry) power, and fatigue were recorded through Wingate test. Weight, height, and fat-free mass were positively correlated with the power parameters of the Wingate test (p < 0.05). The respiratory parameters of forced vital capacity, peak expiratory flow, maximum inspiratory pressure (MIP) and maximum sustained pressure (SMIP) were also significantly correlated with the power parameters. Additionally, the cardiorespiratory parameters of MIP and SMIP were positively correlated with pulse pressure at rest (p < 0.05). The increase in MIP and SMIP is associated with a lower arterial compliance, which indicates that a lower vascular elasticity influences a greater diaphragmatic strength and endurance of the young athlete.
+:::
+
+:::{custom-style="Keywords"}
+**Keywords**: Exercise, Arterial Compliance, Young Athletes, Cardiorespiratory health.
+:::
+
+:::{custom-style="Paragraph"}
+**RESUMEN**: Estudiar las propiedades hemodinámicas de la circulación periférica y su relación con el control cardiorrespiratorio, durante la prueba de fatiga muscular anaeróbica, en atletas jóvenes de competición, se reclutaron nueve adolescentes de nivel de competición nacional e internacional (edad: 15,6 ± 1,9 años; sexo masculino = 7) y evaluado de forma cruzada. Se registraron medidas morfológicas (masa corporal, porcentaje de grasa corporal total y talla), presión arterial (presión arterial sistólica, diastólica, media y de pulso), medidas respiratorias (espirometría y pimometría), potencia y fatiga mediante la prueba de Wingate. El peso, la talla y la masa magra se correlacionaron positivamente con los parámetros de potencia del test de Wingate (p < 0,05). Los parámetros respiratorios de capacidad vital forzada, flujo espiratorio máximo, presión inspiratoria máxima (MIP) y presión máxima sostenida (SMIP) también se correlacionaron significativamente con los parámetros de potencia. Además, los parámetros cardiorrespiratorios de MIP y SMIP se correlacionaron positivamente con la presión del pulso en reposo (p < 0,05). El aumento de MIP y SMIP se asocia con una menor distensibilidad arterial, lo que indica que una menor elasticidad vascular influye en una mayor fuerza y resistencia diafragmática del joven atleta. 
+:::
+
+:::{custom-style="Keywords"}
+**Palabras claves**: Ejercicio, Complianza arterial, Jóvenes deportistas, Salud cardiorrespiratoria 
+:::
+
+\newpage
+
+# Introduction
+
+:::{custom-style="Paragraph"}
+Exercise promotes increased cardiorespiratory fitness, which as a health-related marker has been linked to an improved cardiometabolic profile [@raghuveer2020cardiorespiratory; @myers2019physical], increased blood volume, myocardial contractility, ventricular compliance, angiogenesis [@mcardle2015exercise], and improved arterial compliance (AC) [@jae2010association; @gando2010age]. AC is the ability of blood vessels to expand and contract appropriately in response to changes in volume and pressure. Pulse pressure (PP) is the difference between systolic pressure (SP) minus diastolic pressure (DP) and reflects pulsatile blood circulation, in contrast to mean arterial pressure (MAP), which reflects steady blood circulation, and is therefore considered an indicator of AC [@saez2008distensibilidad]. The presence of these characteristics has been associated with a lower risk of mortality from cardiovascular disease [@hogstrom2014high].
+:::
+
+:::{custom-style="New paragraph"}
+In swimmers and cyclists AC has been studied comparing  the cardiovascular profile with that of untrained subjects [@nishiwaki2017arterial]. Elevated PP has been associated with increased cardiovascular risk in hypertensive and older subjects [@millar1999pulse; @melgarejo2021relative], in young athletes it is unclear what role it plays on cardiorespiratory control and its relationship to other aspects of athletic performance.
+
+During exercise and muscle fatigue, the increased adaptability of vascular architecture favours energy supply to muscles [@green2017vascular], which may be beneficial to athletic performance by reducing the ventilatory load required to compensate for reduced cardiovascular adaptability. In this context, understanding the effect of the haemodynamic characteristics of the peripheral circulation on cardiorespiratory control, especially during the anaerobic muscle fatigue, opens up new areas for the development of training modalities aimed at maximising the vascular adaptations required by athletes in competition, expanding new areas of expertise for coaches and health professionals.
+
+The starting hypothesis of this research was that vascular biomechanical characteristics, reflected by AC, influence proper cardiorespiratory regulation during exercise and may be critical to athletic performance. It is for these reasons that we propose to study the haemodynamic properties of the peripheral circulation and its relationship with cardiorespiratory control, during anaerobic muscle fatigue test, in young competitive athletes.
+:::
+
+# Material y methods
+
+## Design
+
+```{r eval=FALSE}
+data[, .N, Sexo]
+```
+
+:::{custom-style="Paragraph"}
+This correlational study employed a descriptive, transversal, and observational method. The participants were chosen using non-probabilistic sampling and were split into two groups: girls (n=2) and males (n=7). Athletes were observed for at least twenty days before any scheduled competition throughout their pre-competition period. Anthropometric (body weight, height, and percentage of body fat) and cardiovascular (blood pressure) data were recorded before and after the anaerobic muscle fatigue test (i.e., Wingate test).
+:::
+
+## Subjects
+
+:::{custom-style="Paragraph"}
+The athletes (judo and handball athletes) were from the Magallanes Fiscal Gymnasium and the Chilean Antarctic region. A minimum of three years of competitive training, at least six times per week, and at least 14 hours of training per week were required for entry. Take any supplements or drugs that might influence heart rate, have had musculoskeletal injuries in the past three months, or be in pain at the time of the assessments were all exclusion factors. The exclusion criteria were not satisfied by any of the participants. The aims, methods, obligations, and dangers of participation in the study were explained to the participants and their legal guardians.
+:::
+
+## Procedure
+
+:::{custom-style="Paragraph"}
+The measurement stations were carried out within the same laboratory, always during the first hours of the morning for all athletes: Station 1: the athlete comes at the lab, sits for 5 minutes, and then has their blood pressure taken; station 2: the athlete is assessed on his morphological measures (around 10 minutes); station 3: athlete is evaluated through spirometry and pimometry; station 4: the athlete is assessed in the Wingate test
+:::
+
+### Acute muscle fatigue protocol
+
+:::{custom-style="Paragraph"}
+The participants were required to wear a shirt, shorts, and footwear. All participants were told to (a) obtain enough rest the night before, sleeping 8 hours or more, (b) avoid stimulant beverages or drugs before the measures, (c) drink at least 2 litres of water the day before, and (d) eat regularly without changing their diet. 15 minutes before to the test, the participants arrived in the laboratory. The Wingate protocol was conducted out in a laboratory designed for the experiment at 22 °C and 30% RH regulated by air conditioning.
+:::
+
+## Assessment
+
+### Morphological measures
+
+:::{custom-style="Paragraph"}
+The Tanita BC-558 Ironman Segmental Body Composition Monitor (Tanita Ironman, Arlington Heights, IL 60005 USA) was used to measure body mass (kg) and total body fat (percent) with a concordance of 89.3 percent when compared to the Dual X-ray Absorption test using standard measurement protocols [@mialich2011comparative; @calderon2018efecto]. The CHARDER® HM230M manual height rod was used to determine height (Charder Electronics Co., Ltd. No.103, Guozhong Rd., Taiwan, R.O.C.). Two morphological indices were calculated: body mass index (BMI; [body weight] / [height]^2^ [kg/m^2^]) and the fat-free mass index (FFMI; [fat-free mass] / [height]^2^ [kg/m^2^]).
+:::
+
+### Anaerobic muscle fatigue test
+
+:::{custom-style="Paragraph"}
+The Wingate anaerobic test was used to determine anaerobic muscle endurance. This test is used to determine an individual's anaerobic capacity and power [@vandewalle1987standard] and has been widely researched in children and young people [@king2018health], showing to be a safe and reproducible procedure [@bar1987wingate]. As previously stated [@bar1993test], a cycle ergometer test was conducted with a customized load for each athlete. We were able to compute the minimum power output (PO~min~), mean power output (PO~mean~), and peak power outputs (PO~peak~) using the test as follows: Load (kp) x spins in 5 seconds x 11.76; for each power measurement, the lowest, average, and maximum number of revolutions were utilized [@bar2012pediatric]. Throughout the exam, each athlete was continually checked for discomfort or pain via verbal communication.
+:::
+
+### Cardiovascular parameters
+
+:::{custom-style="Paragraph"}
+An Omron® sphygmomanometer was used to assess blood pressure, thus obtaining SP and PD. The assessment was performed with the subject seated in a chair after a 5-minute rest in the same position, which allowed mean arterial pressure (MAP) and pulse pressure (PP) to be calculated afterwards.
+:::
+
+### Respiratory measures
+
+:::{custom-style="Paragraph"}
+For the assessment of respiratory parameters, a portable spirometer (Minispir, MIR - Medical International Research) was used to determine the forced vital capacity (FVC), forced expiratory volume in the first second (FEV-1), the FEV-1:FVC ratio, peak expiratory flow (PEF), maximum inspiratory pressure (MIP) and Sustained MIP (SMIP), and forced inspiratory volume (FIV).
+:::
+
+## Statistical Analyses
+
+:::{custom-style="Paragraph"}
+Continuous variables are reported as mean and standard deviation (*M* ± *SD*), while absolute (n) and relative (%) frequencies were used for categorical variables. For the exploration of the relationships between the variables, *Pearson's* product moment correlation ($r_{Pearson}$) was used, after testing for bivariate normality between compared parameters using the *Shapiro-Wilk* test.
+:::
+
+:::{custom-style="New paragraph"}
+The *Pearson's* correlation coefficient was interpreted according to Funder and Ozer conventions [@funder2019evaluating], meaning $r$ < 0.1 very small, 0.1 ≤ $r$ < 0.2 small, 0.2 ≤ $r$ < 0.3 medium, 0.3 ≤ $r$ < 0.4 large and $r$ ≥ 0.4 very large. Also, the 95% Confidence Interval (CI~95%~) was calculated.
+
+A probability of committing a type I error ($\alpha$) of less than or equal to 5%, i.e. a p ≤ 0.05, was considered sufficient evidence for statistical significance for hypothesis testing. The statistical analysis was performed using the statistical programming language *R* [@rlanguage] and complementary R packages [@makowski2020methods; @corrplot2021; @yihui2014knitr; @dominique2021automated].
+:::
+
+# Results
+
+```{r eval=FALSE}
+data[
+  j = lapply(.SD, writR::cent_disp, str.a = "{mean} ± {sd}"), 
+  .SDcols = c("Edad", "Talla", "Peso", "Grasa")
+]
+```
+
+:::{custom-style="Paragraph"}
+Nine adolescent of national and international competition level were recruited to participate in this study (age: 15.6 ± 1.9 years; height: 167 ± 8.2 cm; body mass: 69.9 ± 15.6 kg; body fat: 22.2 ± 6.4 %).
+:::
+
+## Body composition
+
+:::{custom-style="Paragraph"}
+Descriptive statistics for body composition parameters can be seen in [Table 1](#tab1). 
+:::
+
+:::{custom-style="Table title"}
+[Table 1]{#tab1}. Anthropometric characteristics of the sample assessed. Descriptive statistics are shown as *M* ± *SD*.
+:::
+
+<!--- Power output and body composition --->
+
+```{r eval=FALSE}
+data[j = cor.test(Potencia_mean, Peso)] |> cor_label()
+data[j = cor.test(Potencia_max, Peso)] |> cor_label()
+data[j = cor.test(Potencia_min, Peso)] |> cor_label() # NS
+data[j = cor.test(Fatiga, Peso)] |> cor_label() # NS
+```
+
+```{r eval=FALSE}
+cor.test(~ Potencia_mean + Talla, data) |> cor_label()
+cor.test(~ Potencia_max + Talla, data) |> cor_label()
+cor.test(~ Potencia_min + Talla, data) |> cor_label() # NS
+cor.test(~ Fatiga + Talla, data) |> cor_label() # NS
+```
+
+```{r eval=FALSE}
+cor.test(~ Potencia_mean + Talla, data) |> cor_label()
+cor.test(~ Potencia_max + Talla, data) |> cor_label()
+cor.test(~ Potencia_min + Talla, data) |> cor_label() # NS
+cor.test(~ Fatiga + Talla, data) |> cor_label() # NS
+```
+
+:::{custom-style="New paragraph"}
+When exploring correlations between morphological parameters with the results obtained in the anaerobic muscle fatigue test, we observed very large associations with weight and PO~mean~ ($t_{Student}$ (7) = 2.4, *p* = 0.048, $r_{Pearson}$ = 0.67, CI~95%~[0.01, 0.92]) as well as with PO~peak~ ($t_{Student}$ (7) = 2.8, *p* = 0.026, $r_{Pearson}$ = 0.73, CI~95%~[0.13, 0.94]). Height, was strongly linked to PO~mean~ ($t_{Student}$ (7) = 3.6, *p* = 0.008, $r_{Pearson}$ = 0.81, CI~95%~[0.31, 0.96]) and with PO~peak~ ($t_{Student}$ (7) = 3.8, *p* = 0.007, $r_{Pearson}$ = 0.82, CI~95%~[0.34, 0.96]). Only the FFMI was correlated with PO~min~ ($t_{Student}$ (7) = 2.6, *p* = 0.037, $r_{Pearson}$ = 0.7, CI~95%~[0.06, 0.93]), PO~mean~ ($t_{Student}$ (7) = 3.9, *p* = 0.006, $r_{Pearson}$ = 0.83, CI~95%~[0.37, 0.96]) and with PO~peak~ ($t_{Student}$ (7) = 4.6, *p* = 0.002, $r_{Pearson}$ = 0.87, CI~95%~[0.48, 0.97]).
+:::
+
+<!--- Power output and respiratory parameters --->
+
+## Respiratory profile
+
+```{r eval=FALSE}
+# FEV1
+cor.test(~FEV1 + Potencia_max, data) |> cor_label()
+cor.test(~FEV1 + Potencia_mean, data) |> cor_label()
+cor.test(~FEV1 + Potencia_min, data)$p.value # NS
+cor.test(~FEV1 + Fatiga, data)$p.value # NS
+```
+
+<!--- Parametros mencionados: FEV-1, FVC, PEF, FEF~25%~ --->
+:::{custom-style="Paragraph"}
+In the case of the respiratory profile, we observed a positive correlation between FEV-1 with PO~peak~ ($t_{Student}$ (7) = 4.6, *p* = 0.003, $r_{Pearson}$ = 0.87, CI~95%~[0.48, 0.97]) and with PO~mean~ ($t_{Student}$ (7) = 4, *p* = 0.005, $r_{Pearson}$ = 0.83, CI~95%~[0.38, 0.96]).
+:::
+
+```{r eval=FALSE}
+# FVC
+cor.test(~FVC + Potencia_max, data) |> cor_label()
+cor.test(~FVC + Potencia_mean, data)$p.value # NS
+cor.test(~FVC + Potencia_min, data)$p.value # NS
+cor.test(~FVC + Fatiga, data)$p.value # NS
+
+# PEF
+cor.test(~PEF + Potencia_max, data) |> cor_label()
+cor.test(~PEF + Potencia_mean, data)$p.value # NS
+cor.test(~PEF + Potencia_min, data)$p.value # NS
+cor.test(~PEF + Fatiga, data)$p.value # NS
+
+# FEV1_FVC
+cor.test(~FEV1_FVC + Potencia_max, data)$p.value # NS
+cor.test(~FEV1_FVC + Potencia_mean, data)$p.value # NS
+cor.test(~FEV1_FVC + Potencia_min, data)$p.value # NS
+cor.test(~FEV1_FVC + Fatiga, data)$p.value # NS
+```
+
+:::{custom-style="New paragraph"}
+Similarly, both FVC and PEF were correlated with PO~peak~ ($t_{Student}$ (7) = 2.7, *p* = 0.033, $r_{Pearson}$ = 0.71, CI~95%~[0.08, 0.93], and $t_{Student}$ (7) = 2.7, *p* = 0.03, $r_{Pearson}$ = 0.72, CI~95%~[0.1, 0.94] respectively).
+:::
+
+```{r eval=FALSE}
+# PIMAX
+cor.test(~PIMAX + Potencia_max, data) |> cor_label()
+cor.test(~PIMAX + Potencia_mean, data)$p.value # NS
+cor.test(~PIMAX + Potencia_min, data)$p.value # NS
+cor.test(~PIMAX + Fatiga, data) |> cor_label()
+
+# PIMAX-sos
+cor.test(~PIMAXSOS + Potencia_max, data) |> cor_label()
+cor.test(~PIMAXSOS + Potencia_mean, data) |> cor_label()
+cor.test(~PIMAXSOS + Potencia_min, data)$p.value # NS
+cor.test(~PIMAXSOS + Fatiga, data) |> cor_label()
+```
+
+:::{custom-style="New paragraph"}
+MIP and SMIP, both correlated positively with PO~peak~ ($t_{Student}$ (7) = 3.3, *p* = 0.013, $r_{Pearson}$ = 0.78, CI~95%~[0.24, 0.95], and $t_{Student}$ (7) = 4.1, *p* = 0.004, $r_{Pearson}$ = 0.84, CI~95%~[0.4, 0.97] respectively) and with the fatigue of the Wingate test (MIP, $t_{Student}$ (7) = 4.1, *p* = 0.004, $r_{Pearson}$ = 0.84, CI~95%~[0.4, 0.97]; SMIP, $t_{Student}$ (7) = 3.3, *p* = 0.013, $r_{Pearson}$ = 0.78, CI~95%~[0.24, 0.95]), even though SMIP, unlike MIP, was strongly related to PO~mean~ ($t_{Student}$ (7) = 2.8, *p* = 0.027, $r_{Pearson}$ = 0.73, CI~95%~[0.12, 0.94]).
+
+The correlations between cardiovascular and respiratory parameters can be seen in [Figure 1](#fig1).
+:::
+
+```{r eval=FALSE}
+# Simple model
+data[, lm(PIMAX ~ PP)] |> report::report()
+data[, lm(PIMAXSOS ~ PP)] |> report::report()
+
+# Full model
+data[, lm(PIMAX ~ Edad + IMC + PP) |> report::report()]
+data[, lm(PIMAXSOS ~ Edad + IMC + PP) |> report::report()]
+```
+
+## Linking AC to cardiorespiratory regulation
+
+:::{custom-style="Paragraph"}
+By implementing a linear model using least squares optimisation, it was observed that for every 1 mmHg increase in PP, there is a proportional increase in 2.13 cmH~2~O in MIP (CI~95%~[0.92, 3.34], $t_{Student}$ (7) = 4.16, *p* = 0.004), and an increase by 1.77 cmH~2~O in SMIP (CI~95%~[1.13, 2.41], $t_{Student}$ (7) = 6.56, *p* < 0.001) being able to explain up to 86% (*F*(1, 7) = 43.04, *p* < 0.001) and 71% (*F*(1, 7) = 17.28, *p* = 0.004) of the variance seen in MIP and SMIP respectively. This relationship remains significant even after controlling for the influence of age and BMI (MIP, ${Student}$ = 1.35, CI~95%~[0.01, 2.68], $t_{Student}$ (5) = 2.59, *p* = 0.049; SMIP, $\beta$ = 1.25, CI~95%~[0.71, 1.80], $t_{Student}$ (5) = 5.92, *p* = 0.002).
+:::
+
+```{r eval=FALSE}
+data[, lm(Potencia_max ~ PD)] |> report::report()
+data[, lm(Potencia_max ~ IMC + PD)] |> report::report_statistics()
+```
+
+:::{custom-style="New paragraph"}
+In this context, it was found an inverse relationship linking DP and power, whereas for every 1 mmHg increase in DP we observe a 5.51 Watts decrease in PO~peak~ (CI~95%~[-10.99, -0.02], $t_{Student}$ (7) = -2.37, *p* = 0.049), even after controlling for BMI ($\beta$ = -5.37, CI~95%~[-8.97, -1.78], $t_{Student}$ (6) = -3.66, *p* = 0.011), being able to explain by itself up to 45% of the variation seen in PO~peak~ (*F*(1, 7) = 5.64, *p* = 0.049).
+:::
+
+# Discusion
+
+:::{custom-style="Paragraph"}
+This study aimed to know the haemodynamic properties of the peripheral circulation and its relationship with cardiorespiratory control, during anaerobic muscle fatigue test, in young competitive athletes. Our findings in AC parameters show that there is a positive correlation of PP with both MIP and SMIP in athletes, evidencing that less distensibility of arterial vessels is associated with greater diaphragmatic strengthening. Lower vascular compliance compromises cardiovascular adaptability, allowing greater respiratory overload during exercise [@pinsky2016right; @naeije2017overloaded]. It could be considered that this poor circulatory efficiency would generate an adaptive ventilatory response that forces the body to be able to supply this cardiovascular decrease with an increase in respiratory efficiency, enhancing basic diaphragmatic strength and resistance. This adaptation, although evident at rest, may be conditioned by the cardiorespiratory needs of athletes as a result of their training. [@hartz2018effect].
+:::
+
+:::{custom-style="New paragraph"}
+Arterial stiffness is an independent predictor of cardiovascular risk [@burr2014long]. Eccentric exercise-based training has been observed to produce inflammation and arterial stiffness [@barnes2010arterial], which has been associated with an increased risk of cardiovascular events in ultramarathon athletes [@burr2014long]. On the other hand, it has been shown that the intensity of the training can also be a factor that determines the AC. A German cohort study shows that physical activities associated with intense work show unfavourable effects on the vasculature, reflected by greater arterial stiffness in both men and women; however, lower arterial stiffness was associated not only with exercise activities. sports-related endurance, but also active commuting [@arnold2021domains]. This type of evidence allows considering physical training as a critical factor in the adaptability of the cardiovascular system in the athlete with plausible results in AC.
+
+Like the type of training, age also seems to be an interesting determinant of AC. While young adult athletes present better cardiovascular adaptability than sedentary subjects, the influence of blood pressure is decisive to generate this type of adaptation [@nishiwaki2017arterial]. Interestingly, the changes in arterial stiffness associated with different training programs appear in young and old athletes, however, it is believed that these changes could begin in adolescence [@otsuki2007relationship]. Thus, adaptability in adolescence is essential to develop or not an AC according to the health of each athlete.
+
+Therefore, these antecedents could help to understand the importance of AC, respecting the cardiorespiratory adaptation of young athletes. While age and type of training may have implications in this cardiorespiratory relationship, the adaptive response of the body to training could be a factor that directly affects arterial stiffness. We believe that this information should be known by coaches of young athletes to foresee long-term adverse effects on them. However, these should be studied in depth in future studies in the area.
+:::
+
+# Limitations
+
+:::{custom-style="Paragraph"}
+The main limitations of this study were the small sample size. In addition, for future research we suggest controlling diaphragmatic strength and endurance during anaerobic muscle fatigue test. These antecedents will help us to understand during the execution of the exercise the type of cardiorespiratory adaptability of the young athlete.
+:::
+
+# Conclusion
+
+:::{custom-style="Paragraph"}
+The elasticity of the arteries plays an important role in correct cardiovascular regulation during exercise and can be essential for sports performance. The increase in MIP and SMIP is associated with a lower AC, which indicates that a lower vascular elasticity influences a greater diaphragmatic strength and endurance of the young athlete.
+:::
+
+# Data Availability Statement
+
+:::{custom-style="Paragraph"}
+The original contributions presented in the study are included in the article. Further inquiries can be directed to the corresponding author/s.
+:::
+
+# Ethics Statement
+
+:::{custom-style="Paragraph"}
+The studies involving human participants were reviewed and approved by The Ethics Committee of the University of Magallanes, Chile (Nº141CEC2018). All parents provided written informed consent prior to participation in this study, and athletes provided informed assent.
+:::
+
+# Author Contributions
+
+:::{custom-style="Paragraph"}
+All authors listed have made a substantial, direct, and intellectual contribution to the work and approved it for publication.
+:::
+
+# Acknowledgments
+
+:::{custom-style="Paragraph"}
+We thank all study participants, parents, and their coaches for their contribution.
+:::
+
+# Conflicts of interest
+
+:::{custom-style="Paragraph"}
+The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.
+:::
+
+# Funding
+
+:::{custom-style="Paragraph"}
+This work was funded by MAG2095 (Chilean Education Ministry). CNE received resources from the National Fund for the Promotion of Sports of Chile, code 1800120339 (Instituto Nacional de Deporte de Chile, IND).
+:::
+
+# References
+
+<div id="refs" custom-style="References"></div>

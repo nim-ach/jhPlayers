@@ -1,0 +1,20 @@
+Package: jhPlayers
+Title: Data from the judo-handball players study
+Version: 0.0.0.9000
+Authors@R: 
+    c(
+      person("Matías", "Castillo Aguilar", , "matcasti@umag.cl", role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0001-7291-247X")),
+      person("Cristian", "Núñez Espinosa", , "cristian.nunez@umag.cl", role = c("aut"),
+             comment = c(ORCID = "0000-0002-9896-7062"))
+    )
+Description: Provides the data used in the study on judo-handball players.
+License: CC BY 4.0
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 3.1.0)
+LazyData: true
+Imports: 
+    data.table (>= 1.14.2)
