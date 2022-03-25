@@ -18,3 +18,5 @@ Depends:
 LazyData: true
 Imports: 
     data.table (>= 1.14.2)
+URL: https://github.com/nim-ach/jhPlayers
+BugReports: https://github.com/nim-ach/jhPlayers/issues
