@@ -8,6 +8,14 @@
 \description{
 R-package that provides the data used in the study on judo-handball players.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/nim-ach/jhPlayers}
+  \item Report bugs at \url{https://github.com/nim-ach/jhPlayers/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Matías Castillo Aguilar \email{matcasti@umag.cl} (\href{https://orcid.org/0000-0001-7291-247X}{ORCID})
 

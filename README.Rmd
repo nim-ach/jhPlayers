@@ -1,0 +1,64 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# jhPlayers
+
+<!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/jhPlayers)](https://CRAN.R-project.org/package=jhPlayers)
+[![R-CMD-check](https://github.com/nim-ach/jhPlayers/workflows/R-CMD-check/badge.svg)](https://github.com/nim-ach/jhPlayers/actions)
+<!-- badges: end -->
+
+The goal of jhPlayers is to provide tools for research reproducibility and methods for exploratory data analysis.
+
+## Installation
+
+You can install the development version of jhPlayers from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("nim-ach/jhPlayers")
+```
+
+## Example
+
+This is a basic example which shows you how to print mean and standard deviation for specific variables:
+
+```{r example}
+library(jhPlayers)
+
+# Compute mean for age, height and weight
+colmean_sd(players, c("age", "height", "weight"))
+```
+
+We can also compute summary statistics for our data using `summary()` command:
+
+```{r}
+summary(players[, 1:4])
+```
+
+You can also plot the data, for instance let's plot the relationship between fat-free mass index (ffmi), height and peak power:
+
+```{r, echo = FALSE}
+plot(~ ffmi + height + peak_power, players)
+```
+
+## Citation
+
+To use `jhPlayers` in publications please use:
+
+```{r}
+citation("jhPlayers")
+```
+

@@ -24,14 +24,7 @@
 #'   \item{\code{fvc}: Numeric. Forced vital capacity.}
 #'   \item{\code{pef}: Numeric. Peak expiratory flow.}
 #'   \item{\code{fev1_fvc}: Numeric. FEV-1:FVC ratio.}
-#'   \item{\code{fef25}: Numeric. Forced expiratory flow at 25% of FVC.}
-#'   \item{\code{fef50}: Numeric. Forced expiratory flow at 50% of FVC.}
-#'   \item{\code{fef75}: Numeric. Forced expiratory flow at 75% of FVC.}
-#'   \item{\code{fef25_75}: Numeric. Mean forced expiratory flow between the 25% to 75% of FVC.}
-#'   \item{\code{mvv}: Numeric. Maximal voluntary ventilation.}
 #'   \item{\code{mip}: Numeric. Maximum inspiratory pressure.}
 #'   \item{\code{smip}: Numeric. Sustained maximum inspiratory pressure.}
 #' }
-#'
-#' @source Castillo-Aguilar et al. 2022
 "players"

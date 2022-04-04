@@ -1,5 +1,6 @@
 Package: jhPlayers
 Title: Data from the judo-handball players study
+Date: 2022-04-04
 Version: 0.0.0.9000
 Authors@R: 
     c(

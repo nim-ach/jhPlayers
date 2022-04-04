@@ -1,33 +1,25 @@
 ---
 title: ""
-output: 
-  word_document:
-    reference_docx: "misc/ref_rsm.docx" 
 ---
 
-:::{custom-style="Article title"}
-Relationship of cardiorespiratory control and vascular compliance in competitive young athletes.
-:::
+### Relationship of cardiorespiratory control and vascular compliance in competitive young athletes.
 
-:::{custom-style="Author names"}
+### Relación entre el control cardiorrespiratorio y la distensibilidad vascular en atletas jóvenes de competición.
+
+### Relação entre o controlo cardiorrespiratório e a conformidade vascular em jovens atletas competitivos.
+
 Matías Castillo-Aguilar^1,6^, Héctor F. Retamal Matus^1,6^, Roberto Santa Cruz^2^, Ygor Antônio Tinoco Martins^3^, Oscar Adolfo Niño Méndez^4^, Cristian Núñez-Espinosa^5,6^\*.
-:::
 
-
-:::{custom-style="Affiliation"}
 ^1^ Kinesiology Department, Magallanes University, Punta Arenas, Chile.
 
 ^2^ Department of Intensive Care, Hospital Ramos Mejía, Ciudad Autónoma de Buenos Aires, Argentina.
 
-^3^ Exercise Physiology Laboratory, School of Physical Education, Physiotherapy and Occupational Therapy, Universidade Federal de Minas Gerais, Belo Horizonte, MG, Brazil
+^3^ Exercise Physiology Laboratory, School of Physical Education, Physiotherapy and Occupational Therapy, Universidade Federal de Minas Gerais, Belo Horizonte, MG, Brazil.
 
 ^4^ Centro de Investigación en Actividad Física, Ejercicio y Deporte (CAFED); Facultad de Ciencias del Deporte y la Educación Física; Universidad de Cundinamarca; Fusagasugá; Colombia.
 
 ^5^ School of Medicine, Magallanes University, Punta Arenas, Chile.
 
 ^6^ Chilean Austral Integrative Neurophysiology Group, Centro Asistencial de Docencia e Investigación (CADI-UMAG), Punta Arenas Chile.
-:::
 
-:::{custom-style="Correspondence details"}
 Cristian Núñez-Espinosa, School of Medicine, Magallanes University, Punta Arenas, Chile. Centro Asistencial de Docencia e Investigación CADI-UMAG, Chile. e-mail: [cristian.nunez\@umag.cl](mailto:cristian.nunez@umag.cl). Address: Avenida Bulnes 01855, Box 113-D. Phone: +56 61 2201411
-:::
