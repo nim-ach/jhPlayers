@@ -42,7 +42,7 @@ data("players", package = "jhPlayers")
 **Resultados**: El peso, la altura y la masa libre de grasa se correlacionaron positivamente con los parámetros de potencia del test de Wingate (p < 0.05). Los parámetros respiratorios de capacidad vital forzada, flujo espiratorio máximo, presión inspiratoria máxima (MIP) y presión inspiratoria máxima sostenida (SMIP) también se correlacionaron significativamente con los parámetros de potencia. Además, los parámetros cardiorrespiratorios de MIP y SMIP se correlacionaron positivamente con la presión del pulso en reposo (p < 0.05). \
 **Conclusión**: El aumento de la MIP y SMIP se asocia a una menor compliance arterial, lo que indica que una menor elasticidad vascular influye en una mayor fuerza y resistencia diafragmática del joven atleta.
 
-**Palabras clave**: Ejercicio, Compliance, Atletas, Aptitud Cardiorrespiratoria, Adolescente.
+**Palabras clave**: Ejercicio, Complianza, Atletas, Aptitud Cardiorrespiratoria, Adolescente.
 
 ## Abstrato
 
@@ -207,7 +207,7 @@ players[, cor.test(fev1, fatigue)]
 ```
 
 <!--- Parametros mencionados: FEV-1, FVC, PEF, FEF~25%~ --->
-In the case of the respiratory profile, we observed a positive correlation between FEV-1 with PO~peak~ ($t_{Student}$ (7) = 4.6, *p* = 0.003, $r_{Pearson}$ = 0.87, CI~95%~[0.48, 0.97]) and with PO~mean~ ($t_{Student}$ (7) = 4, *p* = 0.005, $r_{Pearson}$ = 0.83, CI~95%~[0.38, 0.96]).
+In the case of the respiratory profile, we observed a significant correlation between FEV-1 with PO~peak~ ($t_{Student}$ (7) = 4.6, *p* = 0.003, $r_{Pearson}$ = 0.87, CI~95%~[0.48, 0.97]) and with PO~mean~ ($t_{Student}$ (7) = 4, *p* = 0.005, $r_{Pearson}$ = 0.83, CI~95%~[0.38, 0.96]).
 
 ```{r eval=FALSE}
 # FVC
@@ -271,6 +271,7 @@ By implementing a linear model using least squares optimisation, it was observed
 
 ```{r eval=FALSE}
 players[, lm(peak_power ~ dp)] |> report::report()
+players[, lm(peak_power ~ pp)] |> report::report()
 players[, lm(peak_power ~ bmi + dp)] |> report::report_statistics()
 ```
 
@@ -278,11 +279,13 @@ In this context, it was found an inverse relationship linking DP and power, wher
 
 # Discusion
 
-This study aimed to know the haemodynamic properties of the peripheral circulation and its relationship with cardiorespiratory control, during anaerobic muscle fatigue test, in young competitive athletes. Our findings in AC parameters show that there is a positive correlation of PP with both MIP and SMIP in athletes, evidencing that less distensibility of arterial vessels is associated with greater diaphragmatic strengthening. Lower vascular compliance compromises cardiovascular adaptability, allowing greater respiratory overload during exercise [@pinsky2016right; @naeije2017overloaded]. It could be considered that this poor circulatory efficiency would generate an adaptive ventilatory response that forces the body to be able to supply this cardiovascular decrease with an increase in respiratory efficiency, enhancing basic diaphragmatic strength and resistance. This adaptation, although evident at rest, may be conditioned by the cardiorespiratory needs of athletes as a result of their training [@hartz2018effect].
+This study aimed to know the haemodynamic properties of the peripheral circulation and its relationship with cardiorespiratory control during the anaerobic muscle fatigue test in young competitive athletes. Our results on AC parameters show that there is a significant relationship of PP with MIP and SMIP in athletes, even after controlling for BMI, which is evidence that lower arterial vessel distensibility is associated with higher diaphragmatic force. Lower vascular distensibility compromises cardiovascular adaptability, allowing greater respiratory overload during exercise [@pinsky2016right; @naeije2017overloaded]. It is also worth noting that lower PD, possibly due to lower vascular elastic recoil, related with a higher PO~peak~ in the Wingate test, could be influenced by adaptive and compensatory mechanisms, in which poor circulatory efficiency would generate an adaptive ventilatory response that would force the body to be able to compensate for this cardiovascular decrease with an increase in respiratory efficiency, enhancing basic diaphragmatic strength and endurance. This adaptation, although evident at rest, could be conditioned by the cardiorespiratory needs of athletes as a result of their training [@hartz2018effect].
 
 Arterial stiffness is an independent predictor of cardiovascular risk [@burr2014long]. Eccentric exercise-based training has been observed to produce inflammation and arterial stiffness [@barnes2010arterial], which has been associated with an increased risk of cardiovascular events in ultramarathon athletes [@burr2014long]. On the other hand, it has been shown that the intensity of the training can also be a factor that determines the AC. A German cohort study shows that physical activities associated with intense work show unfavourable effects on the vasculature, reflected by greater arterial stiffness in both men and women; however, lower arterial stiffness was associated not only with exercise activities. sports-related endurance, but also active commuting [@arnold2021domains]. This type of evidence allows considering physical training as a critical factor in the adaptability of the cardiovascular system in the athlete with plausible results in AC.
 
 Like the type of training, age also seems to be an interesting determinant of AC. While young adult athletes present better cardiovascular adaptability than sedentary subjects, the influence of blood pressure is decisive to generate this type of adaptation [@nishiwaki2017arterial]. Interestingly, the changes in arterial stiffness associated with different training programs appear in young and old athletes, however, it is believed that these changes could begin in adolescence [@otsuki2007relationship]. Thus, adaptability in adolescence is essential to develop or not an AC according to the health of each athlete.
+
+Furthermore, the effect of sex on the mechanical properties of vascular architecture cannot be excluded from the relationships seen in our data. A paper by Winner et al. (2001), showed that young females tend to exhibit lower AC than young men, despite showing lower SP and PP [@winer2001gender]. This is in line with a cohort study by Avolio et al. (2018) comparing these parameters in different age groups, in which both diastolic and pulse pressure were lower in younger women compared to men of the same age group [@avolio2018arterial].
 
 Therefore, these antecedents could help to understand the importance of AC, respecting the cardiorespiratory adaptation of young athletes. While age and type of training may have implications in this cardiorespiratory relationship, the adaptive response of the body to training could be a factor that directly affects arterial stiffness. We believe that this information should be known by coaches of young athletes to foresee long-term adverse effects on them. However, these should be studied in depth in future studies in the area.
 
